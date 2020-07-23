@@ -72,14 +72,17 @@ app.delete("/films",(request,response) => {
                 response.sendStatus(500);
             }
             else if(result.deletedCount){
-                response.sendStatus(204);
+                response.status(204).send("Deleted");
             }
             else{
                 response.sendStatus(500);
             }
         })
     })
-})
+});
+
+
+
 
 
 
