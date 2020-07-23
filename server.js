@@ -45,7 +45,7 @@ client.connect(() => {
 
 app.get("/search",(request,response) => {
     const client = mongodb.MongoClient(uri);
-    console.log("This is query",req.query);
+    console.log("This is query",request.query);
     client.connect(function () {
         const db = client.db("cinema");
         const collection = db.collection("films");
@@ -54,7 +54,6 @@ app.get("/search",(request,response) => {
             year: 1997,
             actors: request.query.actors.split(",")
         };
-    
         collection.insertOne(film,(error,result) => {
             response.send(error || result.ops[0]);
             client.close();
