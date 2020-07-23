@@ -82,6 +82,28 @@ app.delete("/films",(request,response) => {
 });
 
 
+app.delete("/films/:title", function (request, response) {
+    const client = new mongodb.MongoClient(uri);
+    client.connect(function () {
+      const db = client.db("cinema");
+      const collection = db.collection("films");
+  
+      const searchObject = { title: request.params.title };
+  
+      collection.deleteOne(searchObject, function (error, result) {
+        if (error) {
+          response.status(500).send(error);
+        } else if (result.deletedCount) {
+          response.sendStatus(204);
+        } else {
+          response.sendStatus(404);
+        }
+  
+        client.close();
+      });
+    });
+  });
+
 
 
 
