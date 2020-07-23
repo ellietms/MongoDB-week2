@@ -34,6 +34,7 @@ client.connect(function () {
 
     collection.insertOne(film,(error,result) => {
         res.send(error || result);
+        
         client.close();
     })
 
