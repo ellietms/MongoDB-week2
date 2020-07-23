@@ -1,11 +1,14 @@
 const express = require("express");
 const mongodb = require("mongodb");
-const uri = "mongodb+srv://cyf:Zh04n4s77d5tkLT4@cluster0.5kxur.mongodb.net/test"
+// const uri = "mongodb+srv://cyf:Zh04n4s77d5tkLT4@cluster0.5kxur.mongodb.net/test";
+// const uri ="mongodb+srv://LetsLearnMongoDB2020:GS80GXf7ds2gIuLK@cluster0.5kxur.mongodb.net/test"
+const uri ="mongodb+srv://cyf:6Cd37enBZ2YsqfWj@cluster0.5kxur.mongodb.net/test"
+
 const app = express();
 app.use(express.json());
 
 app.get("/", function (request, response) {
-  const client = mongodb.MongoClient(uri);
+  const client = mongodb.MongoClient(uri,{ useUnifiedTopology: true });
   client.connect(() => {
   const db = client.db("cinema");
   const collection = db.collection("films");
@@ -21,40 +24,39 @@ app.get("/", function (request, response) {
 })
 })
 
-app.post("/films",(req,res) => {
+app.post("/films",(request,response) => {
 const client = mongodb.MongoClient(uri);
-client.connect(function () {
+client.connect(() => {
     const db = client.db("cinema");
     const collection = db.collection("films");
     const film = {
-        title: req.body.title,
+        title: request.body.title,
         year: 1997,
-        actors: req.body.actors
+        actors: request.body.actors
     };
 
     collection.insertOne(film,(error,result) => {
-        res.send(error || result);
-        
+        response.send(error || result);
         client.close();
     })
 
 })
 })
 
-app.get("/search",(req,res) => {
+app.get("/search",(request,response) => {
     const client = mongodb.MongoClient(uri);
     console.log("This is query",req.query);
     client.connect(function () {
         const db = client.db("cinema");
         const collection = db.collection("films");
         const film = {
-            title: req.query.title,
+            title: request.query.title,
             year: 1997,
-            actors: req.query.actors.split(",")
+            actors: request.query.actors.split(",")
         };
     
         collection.insertOne(film,(error,result) => {
-            res.send(error || result.ops[0]);
+            response.send(error || result.ops[0]);
             client.close();
         })
     
