@@ -1,10 +1,10 @@
 const express = require("express");
 const mongodb = require("mongodb");
+const { request, response } = require("express");
 // const uri = "mongodb+srv://cyf:Zh04n4s77d5tkLT4@cluster0.5kxur.mongodb.net/test";
 // const uri ="mongodb+srv://LetsLearnMongoDB2020:GS80GXf7ds2gIuLK@cluster0.5kxur.mongodb.net/test"
 const uri =
   "mongodb+srv://cyf:6Cd37enBZ2YsqfWj@cluster0.5kxur.mongodb.net/test";
-
 const app = express();
 app.use(express.json());
 
@@ -60,5 +60,28 @@ app.get("/search", (request, response) => {
     });
   });
 });
+
+app.delete("/films",(request,response) => {
+    const client = new mongodb.MongoClient(uri);
+    client.connect(() => {
+        const db = client.db("cinema");
+        const collection = db.collection("films");
+        const searchObj = {title : "Princess Mononoke"};
+        collection.deleteOne(searchObj,(error,result) => {
+            if(error){
+                response.sendStatus(500);
+            }
+            else if(result.deletedCount){
+                response.sendStatus(204);
+            }
+            else{
+                response.sendStatus(500);
+            }
+        })
+    })
+})
+
+
+
 
 app.listen(3000);
